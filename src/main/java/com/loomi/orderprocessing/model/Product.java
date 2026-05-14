@@ -32,7 +32,7 @@ public class Product {
     private Integer stockQty;
 
     @Column(nullable = false)
-    private Boolean active = true;
+    private boolean active = true;
 
     @Convert(converter = MetadataConverter.class)
     @Column(columnDefinition = "TEXT")
