@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: ${TEST_DB_URL:jdbc:postgresql://localhost:5432/testdb}
+    username: test
+    password: test
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  flyway:
+    enabled: true
+  kafka:
+    bootstrap-servers: ${TEST_KAFKA_BOOTSTRAP:localhost:9092}
+    consumer:
+      group-id: order-processing-test-group
+      auto-offset-reset: earliest
