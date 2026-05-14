@@ -6,3 +6,4 @@ target/
 *.log
 docs/
 .mcp.json
+CLAUDE.md
