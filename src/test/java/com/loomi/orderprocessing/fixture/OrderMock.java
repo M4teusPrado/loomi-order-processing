@@ -19,6 +19,12 @@ public class OrderMock {
         return item;
     }
 
+    public static OrderItem buildItem(String productId, ProductType type, int quantity) {
+        var item = buildItem(productId, type);
+        item.setQuantity(quantity);
+        return item;
+    }
+
     public static OrderItem subscriptionItem(String productId) {
         return buildItem(productId, ProductType.SUBSCRIPTION);
     }
