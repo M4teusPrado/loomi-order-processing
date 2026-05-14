@@ -1,17 +1,19 @@
 package com.loomi.orderprocessing.service;
 
 import com.loomi.orderprocessing.dto.CreateOrderRequest;
+import com.loomi.orderprocessing.dto.OrderEvent;
 import com.loomi.orderprocessing.dto.OrderResponse;
 import com.loomi.orderprocessing.dto.OrderSummaryResponse;
 import com.loomi.orderprocessing.exception.OrderNotFoundException;
 import com.loomi.orderprocessing.exception.ProductNotAvailableException;
 import com.loomi.orderprocessing.exception.ProductNotFoundException;
+import com.loomi.orderprocessing.kafka.OrderEventProducer;
 import com.loomi.orderprocessing.model.Order;
 import com.loomi.orderprocessing.model.OrderItem;
 import com.loomi.orderprocessing.model.enums.OrderStatus;
 import com.loomi.orderprocessing.repository.OrderRepository;
 import com.loomi.orderprocessing.repository.ProductRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +23,19 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final OrderEventProducer eventProducer;
+
+    public OrderService(OrderRepository orderRepository,
+                        ProductRepository productRepository,
+                        @Autowired(required = false) OrderEventProducer eventProducer) {
+        this.orderRepository = orderRepository;
+        this.productRepository = productRepository;
+        this.eventProducer = eventProducer;
+    }
 
     @Transactional
     public OrderResponse createOrder(CreateOrderRequest request) {
@@ -59,6 +69,10 @@ public class OrderService {
 
         order.setTotalAmount(total);
         orderRepository.save(order);
+
+        if (eventProducer != null) {
+            eventProducer.send(new OrderEvent(order.getOrderId(), order.getCustomerId()));
+        }
 
         return OrderResponse.from(order);
     }
