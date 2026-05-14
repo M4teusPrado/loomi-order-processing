@@ -13,5 +13,5 @@ INSERT INTO products (product_id, name, product_type, price, stock_qty, active, 
 ('GAME-2025-001',      'Epic Game 2027',        'PRE_ORDER',    249.90, NULL, true, '{"releaseDate": "2027-06-01", "preOrderSlots": 1000}'),
 ('PRE-PS6-001',        'PlayStation 6',         'PRE_ORDER',   4999.00, NULL, true, '{"releaseDate": "2027-11-15", "preOrderSlots": 500}'),
 ('PRE-IPHONE16-001',   'iPhone 16 Pro',         'PRE_ORDER',   7999.00, NULL, true, '{"releaseDate": "2027-09-20", "preOrderSlots": 2000}'),
-('CORP-LICENSE-ENT',   'Enterprise License',    'CORPORATE',  15000.00, NULL, true, NULL),
-('CORP-CHAIR-ERG-001', 'Ergonomic Chair Bulk',  'CORPORATE',    899.00,  500, true, NULL);
+('CORP-LICENSE-ENT',   'Enterprise License',    'CORPORATE',  15000.00, NULL, true, '{"cnpj": "12345678000195"}'),
+('CORP-CHAIR-ERG-001', 'Ergonomic Chair Bulk',  'CORPORATE',    899.00,  500, true, '{"cnpj": "98765432000100"}');
