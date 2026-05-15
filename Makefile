@@ -1,4 +1,4 @@
-.PHONY: up down build test logs clean setup
+.PHONY: up down build test logs clean setup db-migrate
 
 setup: build
 
@@ -9,14 +9,20 @@ down:
 	docker-compose down
 
 build:
-	./mvnw clean package -DskipTests
+	mvn clean package -DskipTests
 
 test:
-	./mvnw test
+	mvn test
+
+test-integration:
+	mvn verify
 
 logs:
 	docker-compose logs -f app
 
+db-migrate:
+	mvn flyway:migrate -Dspring-boot.run.profiles=dev
+
 clean:
 	docker-compose down -v
-	./mvnw clean
+	mvn clean
