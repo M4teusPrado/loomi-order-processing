@@ -39,7 +39,7 @@ class OrderEventConsumerTest {
     @Test
     void shouldSkipProcessingWhenOrderIsAlreadyProcessed() throws Exception {
         // Arrange
-        var event = new OrderEvent(ORDER_ID, CUSTOMER_ID);
+        var event = OrderEvent.orderCreated(ORDER_ID, CUSTOMER_ID);
         var payload = new ObjectMapper().writeValueAsString(event);
 
         when(objectMapper.readValue(payload, OrderEvent.class)).thenReturn(event);
@@ -56,7 +56,7 @@ class OrderEventConsumerTest {
     @Test
     void shouldSkipProcessingWhenOrderIsAlreadyFailed() throws Exception {
         // Arrange
-        var event = new OrderEvent(ORDER_ID, CUSTOMER_ID);
+        var event = OrderEvent.orderCreated(ORDER_ID, CUSTOMER_ID);
         var payload = new ObjectMapper().writeValueAsString(event);
 
         when(objectMapper.readValue(payload, OrderEvent.class)).thenReturn(event);
@@ -72,7 +72,7 @@ class OrderEventConsumerTest {
     @Test
     void shouldProcessWhenOrderIsPending() throws Exception {
         // Arrange
-        var event = new OrderEvent(ORDER_ID, CUSTOMER_ID);
+        var event = OrderEvent.orderCreated(ORDER_ID, CUSTOMER_ID);
         var payload = new ObjectMapper().writeValueAsString(event);
         var order = buildOrder(OrderStatus.PENDING);
 
@@ -91,7 +91,7 @@ class OrderEventConsumerTest {
     @Test
     void shouldSkipWhenOrderNotFound() throws Exception {
         // Arrange
-        var event = new OrderEvent(ORDER_ID, CUSTOMER_ID);
+        var event = OrderEvent.orderCreated(ORDER_ID, CUSTOMER_ID);
         var payload = new ObjectMapper().writeValueAsString(event);
 
         when(objectMapper.readValue(payload, OrderEvent.class)).thenReturn(event);

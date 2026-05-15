@@ -71,7 +71,7 @@ public class OrderService {
         orderRepository.save(order);
 
         if (eventProducer != null) {
-            eventProducer.send(new OrderEvent(order.getOrderId(), order.getCustomerId()));
+            eventProducer.send(OrderEvent.orderCreated(order.getOrderId(), order.getCustomerId()));
         }
 
         return OrderResponse.from(order);
