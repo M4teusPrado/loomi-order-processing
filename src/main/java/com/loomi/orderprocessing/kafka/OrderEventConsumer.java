@@ -7,7 +7,6 @@ import com.loomi.orderprocessing.repository.OrderRepository;
 import com.loomi.orderprocessing.service.OrderProcessingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +14,6 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Component
-@Profile("!default")
 @RequiredArgsConstructor
 public class OrderEventConsumer {
 
