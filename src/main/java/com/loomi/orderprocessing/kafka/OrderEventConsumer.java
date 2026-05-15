@@ -2,6 +2,7 @@ package com.loomi.orderprocessing.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loomi.orderprocessing.dto.OrderEvent;
+import com.loomi.orderprocessing.dto.OrderResultEvent;
 import com.loomi.orderprocessing.model.enums.OrderStatus;
 import com.loomi.orderprocessing.repository.OrderRepository;
 import com.loomi.orderprocessing.service.OrderProcessingService;
@@ -19,6 +20,7 @@ public class OrderEventConsumer {
 
     private final OrderRepository orderRepository;
     private final OrderProcessingService orderProcessingService;
+    private final OrderEventProducer eventProducer;
     private final ObjectMapper objectMapper;
 
     @KafkaListener(topics = "order-events", groupId = "order-processing-group")
@@ -49,6 +51,20 @@ public class OrderEventConsumer {
         order.setUpdatedAt(LocalDateTime.now());
         orderRepository.save(order);
 
+        publishResultEvent(order.getOrderId(), finalStatus, order);
         log.info("Order {} processed with status {}", event.orderId(), finalStatus);
+    }
+
+    private void publishResultEvent(String orderId, OrderStatus status, com.loomi.orderprocessing.model.Order order) {
+        OrderResultEvent resultEvent = switch (status) {
+            case PROCESSED -> OrderResultEvent.processed(orderId);
+            case FAILED -> OrderResultEvent.failed(orderId, order.getFailureReason());
+            case PENDING_APPROVAL -> OrderResultEvent.pendingApproval(orderId);
+            default -> null;
+        };
+
+        if (resultEvent != null) {
+            eventProducer.sendResult(resultEvent);
+        }
     }
 }

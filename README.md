@@ -27,7 +27,7 @@ O sistema segue o padrão MVC em camadas com Strategy pattern para processamento
 POST /api/orders
        │
        ▼
-OrderController → OrderService → salva pedido (PENDING) → publica evento Kafka
+OrderController → OrderService → salva pedido (PENDING) → publica em [order-events]
                                                                     │
                                                           OrderEventConsumer
                                                                     │
@@ -39,7 +39,12 @@ OrderController → OrderService → salva pedido (PENDING) → publica evento K
                          PreOrderProcessor   CorporateProcessor
                                   │
                         PROCESSED / FAILED / PENDING_APPROVAL
+                                  │
+                        publica em [order-results]
+                     (OrderProcessed / OrderFailed / OrderPendingApproval)
 ```
+
+> **Nota:** O tópico `order-results` existe para sistemas downstream (notificações, inventário, relatórios). Neste projeto não há consumer implementado para esse tópico — em um contexto real, serviços independentes assinariam esse tópico para reagir ao resultado de cada pedido.
 
 ### Tipos de produto e regras
 
