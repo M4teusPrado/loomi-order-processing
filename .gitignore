@@ -6,6 +6,5 @@ mvnw
 mvnw.cmd
 .DS_Store
 *.log
-docs/
 .mcp.json
 CLAUDE.md
